@@ -1,0 +1,75 @@
+package Heise::Shariff;
+use Mojo::Base 'Mojolicious';
+
+our $VERSION  = '1.0';
+
+sub startup {
+    my $self = shift;
+
+    $self->plugin(Config => {file => 'shariff.conf'});
+
+    $self->helper(services => sub {
+        use Heise::Shariff::Service::Facebook;
+        use Heise::Shariff::Service::Twitter;
+        use Heise::Shariff::Service::GooglePlus;
+        return [
+            Heise::Shariff::Service::Facebook->new,
+            Heise::Shariff::Service::Twitter->new,
+            Heise::Shariff::Service::GooglePlus->new,
+        ];
+    });
+
+    $self->helper(get_counts => sub {
+        my ($c, $url) = @_;
+
+        my @services = @{$c->services};
+
+        $c->delay(
+            sub {
+                my $delay = shift;
+                for my $service (@services) {
+                    my $request = $service->request($url);
+                    $c->ua->start(
+                        $c->ua->build_tx(@{$service->request($url)}),
+                        $delay->begin
+                    );
+                }
+            },
+            sub {
+                my ($delay, @transactions) = @_;
+
+                my %counts;
+
+                for (my $i = 0; $i < @transactions; $i++) {
+                    # warn dumper $transactions[$i]->res;
+                    my $service = $services[$i];
+                    $counts{ $service->get_name } =
+                      $service->extract_count($transactions[$i]->res)
+                }
+
+                $c->render(json => \%counts);
+            }
+        );
+    });
+
+    $self->validation->validator->add_check(matches_domain => sub {
+        my ( $validation, $name, $value, $domain ) = @_;
+        return Mojo::URL->new($value)->host !~ $domain;
+    });
+
+    my $r = $self->routes;
+
+    $r->get('/' => sub {
+        my $c = shift;
+        my $validation = $c->validation;
+
+        $validation->required("url")->matches_domain($c->config->{domain});
+
+        return $c->render(json => {error => "invalid url"}, status => 400)
+          if $validation->has_error;
+
+        return $c->get_counts($validation->param('url'));
+    });
+}
+
+1;
