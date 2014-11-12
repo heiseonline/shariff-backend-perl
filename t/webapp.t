@@ -10,6 +10,6 @@ my $response = $t->get_ok('/?url=http://www.heise.de/')
   ->content_type_is('application/json')
   ->json_like('/twitter'  => qr/^[1-9]\d*$/)
   ->json_like('/facebook' => qr/^[1-9]\d*$/)
-  ->json_like('/gplus'    => qr/^[1-9]\d*$/);
+  ->json_like('/googleplus'    => qr/^[1-9]\d*$/);
 
 done_testing();

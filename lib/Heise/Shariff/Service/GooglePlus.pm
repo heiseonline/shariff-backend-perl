@@ -28,7 +28,7 @@ sub extract_count {
 }
 
 sub get_name {
-    return 'gplus';
+    return 'googleplus';
 }
 
 1;
