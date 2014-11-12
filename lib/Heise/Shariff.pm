@@ -3,7 +3,7 @@ use Mojo::Base 'Mojolicious';
 
 use Mojo::Loader;
 
-our $VERSION  = '1.01';
+our $VERSION  = '1.02';
 
 has service_namespaces => sub {['Heise::Shariff::Service']};
 
