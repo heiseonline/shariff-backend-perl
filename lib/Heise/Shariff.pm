@@ -1,6 +1,7 @@
 package Heise::Shariff;
 use Mojo::Base 'Mojolicious';
 
+use Mojo::Cache;
 use Mojo::Loader;
 
 our $VERSION  = '1.02';
@@ -11,6 +12,8 @@ sub startup {
     my $self = shift;
 
     $self->plugin('Config');
+
+    $self->helper(cache => sub { state $cache = Mojo::Cache->new });
 
     $self->helper(services => sub {
         my @services;
@@ -28,7 +31,13 @@ sub startup {
     $self->helper(get_counts => sub {
         my ($c, $url) = @_;
 
+        if (my $counts = $c->cache->get($url)) {
+            return $c->render(json => $counts);
+        }
+
         my @services = @{$c->services};
+
+        $c->app->log->debug('sending concurrent requests ...');
 
         $c->delay(
             sub {
@@ -52,6 +61,8 @@ sub startup {
                     $counts{ $service->get_name } =
                       $service->extract_count($transactions[$i]->res)
                 }
+
+                $c->cache->set($url => \%counts);
 
                 $c->render(json => \%counts);
             }
