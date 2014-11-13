@@ -10,7 +10,7 @@ has service_namespaces => sub {['Heise::Shariff::Service']};
 sub startup {
     my $self = shift;
 
-    $self->plugin(Config => {file => 'shariff.conf'});
+    $self->plugin('Config');
 
     $self->helper(services => sub {
         my @services;
