@@ -1,10 +1,10 @@
 package Heise::Shariff;
 use Mojo::Base 'Mojolicious';
 
-use Mojo::Cache;
+use Heise::Shariff::Cache;
 use Mojo::Loader;
 
-our $VERSION  = '1.02';
+our $VERSION  = '1.03';
 
 has service_namespaces => sub {['Heise::Shariff::Service']};
 
@@ -13,7 +13,11 @@ sub startup {
 
     $self->plugin('Config');
 
-    $self->helper(cache => sub { state $cache = Mojo::Cache->new });
+    $self->helper(cache => sub {
+        state $cache = Heise::Shariff::Cache->new(
+            expires => shift->config->{cache}->{expires}
+        );
+    });
 
     $self->helper(services => sub {
         my @services;
