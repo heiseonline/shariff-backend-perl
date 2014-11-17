@@ -26,9 +26,16 @@ You need to proxy requests from you webserver to the hypnotoad server. See [Mojo
 
 This project is bundled with a configuration file `shariff.conf`. The following configuration options are available:
 
-| Key         | Type | Description |
-|-------------|------|-------------|
-| `domain`   | `Regexp` | A regular expression describing one or more domain(s) for which share counts may be requested |
+| Key         | Type     | Description |
+|-------------|----------|-------------|
+| `cache`     | `HASH`   | Cache settings described below |
+| `domain`    | `Regexp` | A regular expression describing one or more domain(s) for which share counts may be requested |
+
+Cache settings:
+
+| Key       | Type  | Description |
+|-----------|-------|-------------|
+| `expires` | `int` | Time in seconds to hold fetched data in in-memory cache. |
 
 Testing your installation
 -------------------------
