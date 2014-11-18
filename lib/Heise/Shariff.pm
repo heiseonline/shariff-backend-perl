@@ -2,9 +2,10 @@ package Heise::Shariff;
 use Mojo::Base 'Mojolicious';
 
 use Heise::Shariff::Cache;
+use Mojo::Date;
 use Mojo::Loader;
 
-our $VERSION  = '1.04';
+our $VERSION  = '1.05';
 
 has service_namespaces => sub {['Heise::Shariff::Service']};
 
@@ -32,11 +33,19 @@ sub startup {
         return \@services;
     });
 
+    $self->helper(render_json => sub {
+        my ($c, $counts, $last_modified) = @_;
+        my $headers = $c->res->headers;
+        $headers->cache_control('public, max-age=60');
+        $headers->last_modified($last_modified);
+        $c->render(json => $counts);
+    });
+
     $self->helper(get_counts => sub {
         my ($c, $url) = @_;
 
-        if (my $counts = $c->cache->get($url)) {
-            return $c->render(json => $counts);
+        if (my $data = $c->cache->get($url)) {
+            return $c->render_json($data->{counts}, $data->{requested});
         }
 
         my @services = @{$c->services};
@@ -66,9 +75,13 @@ sub startup {
                       $service->extract_count($transactions[$i]->res)
                 }
 
-                $c->cache->set($url => \%counts);
+                my %data = (
+                    counts    => \%counts,
+                    requested => Mojo::Date->new,
+                );
 
-                $c->render(json => \%counts);
+                $c->cache->set($url => \%data);
+                $c->render_json($data{counts}, $data{requested});
             }
         );
     });
@@ -89,9 +102,7 @@ sub startup {
         return $c->render(json => {error => "invalid url"}, status => 400)
           if $validation->has_error;
 
-        $c->res->headers->cache_control('public, max-age=60');
-
-        return $c->get_counts($validation->param('url'));
+        $c->get_counts($validation->param('url'));
     });
 }
 
