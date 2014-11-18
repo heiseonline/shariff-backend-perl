@@ -44,8 +44,9 @@ sub startup {
     $self->helper(get_counts => sub {
         my ($c, $url) = @_;
 
+        # Share numbers in cache?
         if (my $data = $c->cache->get($url)) {
-            return $c->render_json($data->{counts}, $data->{requested});
+            return $c->render_json($data->{counts}, $data->{mtime});
         }
 
         my @services = @{$c->services};
@@ -76,12 +77,12 @@ sub startup {
                 }
 
                 my %data = (
-                    counts    => \%counts,
-                    requested => Mojo::Date->new,
+                    counts => \%counts,
+                    mtime  => Mojo::Date->new,
                 );
 
                 $c->cache->set($url => \%data);
-                $c->render_json($data{counts}, $data{requested});
+                $c->render_json($data{counts}, $data{mtime});
             }
         );
     });
