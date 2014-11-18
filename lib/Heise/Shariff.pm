@@ -5,7 +5,7 @@ use Heise::Shariff::Cache;
 use Mojo::Date;
 use Mojo::Loader;
 
-our $VERSION  = '1.05';
+our $VERSION  = '1.06';
 
 has service_namespaces => sub {['Heise::Shariff::Service']};
 
@@ -33,20 +33,14 @@ sub startup {
         return \@services;
     });
 
-    $self->helper(render_json => sub {
-        my ($c, $counts, $last_modified) = @_;
-        my $headers = $c->res->headers;
-        $headers->cache_control('public, max-age=60');
-        $headers->last_modified($last_modified);
-        $c->render(json => $counts);
-    });
-
     $self->helper(get_counts => sub {
         my ($c, $url) = @_;
 
-        # Share numbers in cache?
-        if (my $data = $c->cache->get($url)) {
-            return $c->render_json($data->{counts}, $data->{mtime});
+        if (my $counts = $c->cache->get($url)) {
+            my $mtime = $c->cache->get_mtime($url);
+            return $c->is_fresh(last_modified => $mtime)
+              ? $c->rendered(304)
+              : $c->render(json => $counts);
         }
 
         my @services = @{$c->services};
@@ -76,13 +70,9 @@ sub startup {
                       $service->extract_count($transactions[$i]->res)
                 }
 
-                my %data = (
-                    counts => \%counts,
-                    mtime  => Mojo::Date->new,
-                );
-
-                $c->cache->set($url => \%data);
-                $c->render_json($data{counts}, $data{mtime});
+                my $mtime = $c->cache->set($url => \%counts);
+                $c->res->headers->last_modified(Mojo::Date->new($mtime));
+                $c->render(json => \%counts);
             }
         );
     });
@@ -103,6 +93,7 @@ sub startup {
         return $c->render(json => {error => "invalid url"}, status => 400)
           if $validation->has_error;
 
+        $c->res->headers->cache_control('public, max-age=60');
         $c->get_counts($validation->param('url'));
     });
 }
