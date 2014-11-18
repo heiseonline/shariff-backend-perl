@@ -4,7 +4,7 @@ use Mojo::Base 'Mojolicious';
 use Heise::Shariff::Cache;
 use Mojo::Loader;
 
-our $VERSION  = '1.03';
+our $VERSION  = '1.04';
 
 has service_namespaces => sub {['Heise::Shariff::Service']};
 
@@ -88,6 +88,8 @@ sub startup {
 
         return $c->render(json => {error => "invalid url"}, status => 400)
           if $validation->has_error;
+
+        $c->res->headers->cache_control('public, max-age=60');
 
         return $c->get_counts($validation->param('url'));
     });
