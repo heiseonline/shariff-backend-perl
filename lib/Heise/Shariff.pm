@@ -5,7 +5,7 @@ use Heise::Shariff::Cache;
 use Mojo::Date;
 use Mojo::Loader;
 
-our $VERSION  = '1.06';
+our $VERSION  = '1.07';
 
 has service_namespaces => sub {['Heise::Shariff::Service']};
 
@@ -15,9 +15,11 @@ sub startup {
     $self->plugin('Config');
 
     $self->helper(cache => sub {
-        state $cache = Heise::Shariff::Cache->new(
-            expires => shift->config->{cache}->{expires}
-        );
+        my $config = shift->config->{cache};
+        my $class = $config->{class} // 'Heise::Shariff::Cache';
+        my $e = Mojo::Loader->new->load($class);
+        die qq{Loading "$class" failed} if $e;
+        state $cache = $class->new(@{$config->{options} // []});
     });
 
     $self->helper(services => sub {
@@ -36,11 +38,10 @@ sub startup {
     $self->helper(get_counts => sub {
         my ($c, $url) = @_;
 
-        if (my $counts = $c->cache->get($url)) {
-            my $mtime = $c->cache->get_mtime($url);
-            return $c->is_fresh(last_modified => $mtime)
+        if (my $data = $c->cache->get($url)) {
+            return $c->is_fresh(last_modified => $data->{mtime})
               ? $c->rendered(304)
-              : $c->render(json => $counts);
+              : $c->render(json => $data->{counts});
         }
 
         my @services = @{$c->services};
@@ -70,7 +71,15 @@ sub startup {
                       $service->extract_count($transactions[$i]->res)
                 }
 
-                my $mtime = $c->cache->set($url => \%counts);
+                my $mtime = time;
+                $c->cache->set(
+                    $url,
+                    {
+                        counts => \%counts,
+                        mtime  => $mtime,
+                    },
+                    $c->config->{cache}->{expires}
+                );
                 $c->res->headers->last_modified(Mojo::Date->new($mtime));
                 $c->render(json => \%counts);
             }

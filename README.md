@@ -28,14 +28,16 @@ This project is bundled with a configuration file `shariff.conf`. The following 
 
 | Key         | Type     | Description |
 |-------------|----------|-------------|
-| `cache`     | `HASH`   | Cache settings described below |
-| `domain`    | `Regexp` | A regular expression describing one or more domain(s) for which share counts may be requested |
+| `cache`     | `hashref`   | Cache settings described below |
+| `domain`    | `regexp` | A regular expression describing one or more domain(s) for which share counts may be requested |
 
 Cache settings:
 
-| Key       | Type  | Description |
-|-----------|-------|-------------|
-| `expires` | `int` | Time in seconds to hold fetched data in in-memory cache. |
+| Key       | Type  | Description | Default |
+|-----------|-------|-------------|---------|
+| `class`   | `scalar` | Cache class name to use. | `Heise::Shariff::Cache`. |
+| `expires` | `scalar` | Time in seconds to hold fetched data in in-memory cache. | 60 |
+| `options` | `arrayref` | A list of options to be passed to the cache class constructor. Setting `options` to `[{foo => 'bar'}, 'baz']` leads to call `$cache->new({foo => 'bar'}, 'baz')`. | `[]` |
 
 Testing your installation
 -------------------------

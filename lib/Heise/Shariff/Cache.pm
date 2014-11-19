@@ -4,14 +4,6 @@ use Mojo::Base 'Mojo::Cache';
 
 has expires => sub { 60 };
 
-sub get_mtime {
-    my ($self, $key) = @_;
-
-    return unless (my $data = $self->SUPER::get($key));
-
-    return $data->{mtime};
-}
-
 sub get {
     my ($self, $key) = @_;
 
@@ -25,13 +17,11 @@ sub get {
 }
 
 sub set {
-    my ($self, $key, $value) = @_;
-    my $mtime = time;
+    my ($self, $key, $value, $expires) = @_;
     $self->SUPER::set($key, {
-        mtime => $mtime,
+        mtime => time,
         val   => $value,
     });
-    return $mtime;
 }
 
 1;
