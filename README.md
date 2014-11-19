@@ -26,10 +26,11 @@ You need to proxy requests from you webserver to the hypnotoad server. See [Mojo
 
 This project is bundled with a configuration file `shariff.conf`. The following configuration options are available:
 
-| Key         | Type     | Description |
-|-------------|----------|-------------|
-| `cache`     | `hashref`   | Cache settings described below |
-| `domain`    | `regexp` | A regular expression describing one or more domain(s) for which share counts may be requested |
+| Key         | Type      | Description |
+|-------------|-----------|-------------|
+| `cache`     | `hashref` | Cache settings described below |
+| `domain`    | `regexp`  | A regular expression describing one or more domain(s) for which share counts may be requested |
+| `hypnotoad` | `hashref` | Hypnotoad webserver settings as described in [Mojolicious docs](http://mojolicio.us/perldoc/Mojo/Server/Hypnotoad#SETTINGS). You may want to change the `listen` setting. | 
 
 Cache settings:
 
