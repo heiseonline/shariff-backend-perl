@@ -7,8 +7,8 @@ Shariff is used to determine how often a page is shared in social media, but wit
 
 This document describes the Perl backend. The following backends are also available:
 
-* [https://github.com/heiseonline/shariff-backend-node](shariff-backend-node)
-* [https://github.com/heiseonline/shariff-backend-php](shariff-backend-php)
+* [shariff-backend-node](https://github.com/heiseonline/shariff-backend-node)
+* [shariff-backend-php](https://github.com/heiseonline/shariff-backend-php)
 
 Installing the Shariff backend on you own server
 ------------------------------------------------
