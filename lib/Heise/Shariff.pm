@@ -5,7 +5,7 @@ use Heise::Shariff::Cache;
 use Mojo::Date;
 use Mojo::Loader;
 
-our $VERSION  = '1.07';
+our $VERSION  = '1.08';
 
 has service_namespaces => sub {['Heise::Shariff::Service']};
 

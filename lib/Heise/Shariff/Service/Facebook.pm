@@ -7,7 +7,7 @@ sub request {
 
     my $furl = Mojo::URL->new('https://api.facebook.com/method/fql.query');
     $furl->query->param(format => 'json');
-    my $query = qq{select like_count from link_stat where url="$url"};
+    my $query = qq{select share_count from link_stat where url="$url"};
     $furl->query->param(query => $query);
 
     return [get => $furl];
@@ -15,7 +15,7 @@ sub request {
 
 sub extract_count {
     my ($self, $res) = @_;
-    return $res->json->[0]->{like_count};
+    return $res->json->[0]->{share_count};
 }
 
 sub get_name {
