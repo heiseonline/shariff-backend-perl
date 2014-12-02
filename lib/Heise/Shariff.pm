@@ -5,7 +5,7 @@ use Heise::Shariff::Cache;
 use Mojo::Date;
 use Mojo::Loader;
 
-our $VERSION  = '1.08';
+our $VERSION  = '1.09';
 
 has service_namespaces => sub {['Heise::Shariff::Service']};
 
@@ -67,8 +67,10 @@ sub startup {
                 for (my $i = 0; $i < @transactions; $i++) {
                     # warn dumper $transactions[$i]->res;
                     my $service = $services[$i];
-                    $counts{ $service->get_name } =
-                      $service->extract_count($transactions[$i]->res)
+
+                    if (my $value = $service->extract_count($transactions[$i]->res)) {
+                        $counts{ $service->get_name } = $value;
+                    }
                 }
 
                 my $mtime = time;

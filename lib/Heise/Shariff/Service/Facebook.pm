@@ -21,7 +21,7 @@ sub extract_count {
         return $res->json->[0]->{share_count};
     } else {
         warn dumper($res);
-        return 0;
+        return undef;
     }
 }
 
