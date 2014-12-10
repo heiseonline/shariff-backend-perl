@@ -15,14 +15,14 @@ Installing the Shariff backend on you own server
 
 This software is based on [Mojolicious](http://mojolicio.us). Make sure, you've installed it, e.g. by running `cpanm Mojolicious`.
 
-To get started with the shariff backend, unzip the current [release](https://github.com/heiseonline/shariff-backend-perl/releases) zip file into a local folder. Start the server application by using [hypnotoad](http://mojolicio.us/perldoc/hypnotoad) script.
+To get started with the shariff backend, unzip the current [release](https://github.com/heiseonline/shariff-backend-perl/releases) zip file into a local folder. Start the server application by using the [hypnotoad](http://mojolicio.us/perldoc/hypnotoad) script.
 
 ```bash
 $ hypnotoad script/shariff
 Server available at http://127.0.0.1:8080.
 ```
 
-You need to proxy requests from you webserver to the hypnotoad server. See [Mojolicious Cookbook](http://mojolicio.us/perldoc/Mojolicious/Guides/Cookbook#DEPLOYMENT) for some Nginx or Apache recipes.
+You need to proxy requests from your webserver to the hypnotoad server. See [Mojolicious Cookbook](http://mojolicio.us/perldoc/Mojolicious/Guides/Cookbook#DEPLOYMENT) for some Nginx or Apache recipes.
 
 This project is bundled with a configuration file `shariff.conf`. The following configuration options are available:
 
