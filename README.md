@@ -30,7 +30,8 @@ This project is bundled with a configuration file `shariff.conf`. The following 
 |-------------|-----------|-------------|
 | `cache`     | `hashref` | Cache settings described below |
 | `domain`    | `regexp`  | A regular expression describing one or more domain(s) for which share counts may be requested |
-| `hypnotoad` | `hashref` | Hypnotoad webserver settings as described in [Mojolicious docs](http://mojolicio.us/perldoc/Mojo/Server/Hypnotoad#SETTINGS). You may want to change the `listen` setting. | 
+| `hypnotoad` | `hashref` | Hypnotoad webserver settings as described in [Mojolicious docs](http://mojolicio.us/perldoc/Mojo/Server/Hypnotoad#SETTINGS). You may want to change the `listen` setting. |
+| `services`  | `hashref` | Service specific settings |
 
 Cache settings:
 
@@ -48,5 +49,3 @@ If the backend runs under `http://example.com/my-shariff-backend/`, calling the 
 ```json
 {"facebook":1452,"twitter":404,"googleplus":23}
 ```
-
-
