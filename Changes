@@ -1,2 +1,9 @@
+1.03 2015-03-19
+  - Added support for Facebook Graph API.
+
+1.02 2014-11-12
+  - Renamed gplus to googleplus.
+
+1.01 2014-11-12
 1.0  2014-11-12
   - First release.
