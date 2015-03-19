@@ -6,23 +6,33 @@ use Mojo::Util qw(dumper);
 sub request {
     my ($self, $url) = @_;
 
-    my $furl = Mojo::URL->new('https://api.facebook.com/method/fql.query');
-    $furl->query->param(format => 'json');
-    my $query = qq{select share_count from link_stat where url="$url"};
-    $furl->query->param(query => $query);
+    my $app_id = $self->app->config->{services}->{facebook}->{app_id};
+    my $secret = $self->app->config->{services}->{facebook}->{secret};
 
+    my $furl = q();
+    if ($app_id && $secret) {
+        $furl = Mojo::URL->new('https://graph.facebook.com/v2.2/');
+        $furl->query->param(access_token => $app_id.'|'.$secret);
+        $furl->query->param(id => $url);
+    } else {
+        $furl = Mojo::URL->new('https://api.facebook.com/method/fql.query');
+        $furl->query->param(format => 'json');
+        my $query = qq{select share_count from link_stat where url="$url"};
+        $furl->query->param(query => $query);
+    }
     return [get => $furl];
 }
 
 sub extract_count {
     my ($self, $res) = @_;
 
-    if (ref $res->json eq 'ARRAY') {
+    if (ref $res->json eq 'ARRAY' && exists $res->json->[0]->{share_count}) {
         return $res->json->[0]->{share_count};
-    } else {
-        warn dumper($res);
-        return undef;
     }
+    if (exists $res->json->{share} && $res->json->{share}->{share_count}) {
+        return $res->json->{share}->{share_count};
+    }
+    return undef;
 }
 
 sub get_name {

@@ -4,6 +4,8 @@ use Mojo::Base -base;
 
 use Mojo::URL;
 
+has 'app';
+
 has url => sub {};
 
 sub request {

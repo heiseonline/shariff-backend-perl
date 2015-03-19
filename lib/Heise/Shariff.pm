@@ -29,7 +29,7 @@ sub startup {
             for my $module (@{$loader->search($ns)}) {
                 my $e = $loader->load($module);
                 warn qq{Loading "$module" failed: $e} and next if ref $e;
-                push @services, $module->new;
+                push @services, $module->new(app => $self->app);
             }
         }
         return \@services;
