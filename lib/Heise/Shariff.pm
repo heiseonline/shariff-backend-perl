@@ -68,7 +68,7 @@ sub startup {
                     # warn dumper $transactions[$i]->res;
                     my $service = $services[$i];
 
-                    if (my $value = $service->extract_count($transactions[$i]->res)) {
+                    if (defined(my $value = $service->extract_count($transactions[$i]->res))) {
                         $counts{ $service->get_name } = $value;
                     }
                 }
