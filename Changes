@@ -1,3 +1,6 @@
+1.04 2015-03-23
+  - Fixed Facebook displaying undef status when share count is zero.
+
 1.03 2015-03-19
   - Added support for Facebook Graph API.
 
