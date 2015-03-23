@@ -26,10 +26,11 @@ sub request {
 sub extract_count {
     my ($self, $res) = @_;
 
+    $self->app->log->debug( dumper($res->json));
     if (ref $res->json eq 'ARRAY' && exists $res->json->[0]->{share_count}) {
         return $res->json->[0]->{share_count};
     }
-    if (exists $res->json->{share} && $res->json->{share}->{share_count}) {
+    if (exists $res->json->{share} && defined($res->json->{share}->{share_count})) {
         return $res->json->{share}->{share_count};
     }
     return undef;
