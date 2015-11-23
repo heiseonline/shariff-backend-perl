@@ -1,3 +1,6 @@
+2.0  2015-11-23
+  - Removed Twitter API.
+
 1.04 2015-03-23
   - Fixed Facebook displaying undef status when share count is zero.
 
