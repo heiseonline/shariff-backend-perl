@@ -68,7 +68,7 @@ sub startup {
                     my $service = $services[$i];
 
                     if (defined(my $value = $service->extract_count($transactions[$i]->res))) {
-                        $counts{ $service->get_name } = $value;
+                        $counts{ $service->get_name } = $value + 0;
                     }
                 }
 
