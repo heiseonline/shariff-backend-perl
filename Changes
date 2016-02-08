@@ -1,3 +1,7 @@
+3.0  2016-02-09
+  - Updated to Mojolicious 6.0.
+  - Removed obsolete tests for Twitter API.
+
 2.0  2015-11-23
   - Removed Twitter API.
 

@@ -3,9 +3,9 @@ use Mojo::Base 'Mojolicious';
 
 use Heise::Shariff::Cache;
 use Mojo::Date;
-use Mojo::Loader;
+use Mojo::Loader qw(load_class find_modules);
 
-our $VERSION  = '1.09';
+our $VERSION  = '3.0';
 
 has service_namespaces => sub {['Heise::Shariff::Service']};
 
@@ -17,17 +17,16 @@ sub startup {
     $self->helper(cache => sub {
         my $config = shift->config->{cache};
         my $class = $config->{class} // 'Heise::Shariff::Cache';
-        my $e = Mojo::Loader->new->load($class);
+        my $e = load_class($class);
         die qq{Loading "$class" failed} if $e;
         state $cache = $class->new(@{$config->{options} // []});
     });
 
     $self->helper(services => sub {
         my @services;
-        my $loader = Mojo::Loader->new;
         for my $ns (@{$self->service_namespaces}) {
-            for my $module (@{$loader->search($ns)}) {
-                my $e = $loader->load($module);
+            for my $module (find_modules($ns)) {
+                my $e = load_class($module);
                 warn qq{Loading "$module" failed: $e} and next if ref $e;
                 push @services, $module->new(app => $self->app);
             }
