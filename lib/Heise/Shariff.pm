@@ -5,7 +5,7 @@ use Heise::Shariff::Cache;
 use Mojo::Date;
 use Mojo::Loader qw(load_class find_modules);
 
-our $VERSION  = '3.0';
+our $VERSION  = '3.1';
 
 has service_namespaces => sub {['Heise::Shariff::Service']};
 

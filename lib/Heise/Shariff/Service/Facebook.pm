@@ -31,10 +31,10 @@ sub extract_count {
 
     return undef unless $json;
 
-    if (ref $json eq 'ARRAY' && exists $json->[0]->{share_count}) {
+    if (ref $json eq 'ARRAY' && ref($json->[0]) eq 'HASH' && exists $json->[0]->{share_count}) {
         return $json->[0]->{share_count};
     }
-    if (exists $json->{share} && defined($json->{share}->{share_count})) {
+    if (ref $json eq 'HASH' && ref($json->{share}) eq 'HASH' && defined($json->{share}->{share_count})) {
         return $json->{share}->{share_count};
     }
     return undef;

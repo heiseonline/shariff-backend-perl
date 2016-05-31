@@ -1,3 +1,6 @@
+3.1  2016-05-31
+  - Made Facebook counter extraction more robust.
+
 3.0  2016-02-09
   - Updated to Mojolicious 6.0.
   - Removed obsolete tests for Twitter API.
