@@ -1,3 +1,7 @@
+4.0 2017-06-13
+  - Removed support for Facebook FQL API.
+  - Updated to Mojolicious 7.0.
+
 3.1  2016-05-31
   - Made Facebook counter extraction more robust.
 
