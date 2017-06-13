@@ -24,7 +24,7 @@ WriteMakefile(
     no_index => {directory => ['t']}
   },
   PREREQ_PM => {
-    'Mojolicious' => '6.0'
+    'Mojolicious' => '7.0'
   },
   EXE_FILES => ['script/shariff'],
   test => {TESTS => 't/*.t'}
