@@ -9,17 +9,14 @@ sub request {
     my $app_id = $self->app->config->{services}->{facebook}->{app_id};
     my $secret = $self->app->config->{services}->{facebook}->{secret};
 
-    my $furl = q();
-    if ($app_id && $secret) {
-        $furl = Mojo::URL->new('https://graph.facebook.com/v2.2/');
-        $furl->query->param(access_token => $app_id.'|'.$secret);
-        $furl->query->param(id => $url);
-    } else {
-        $furl = Mojo::URL->new('https://api.facebook.com/method/fql.query');
-        $furl->query->param(format => 'json');
-        my $query = qq{select share_count from link_stat where url="$url"};
-        $furl->query->param(query => $query);
+    unless (defined($app_id) && defined($secret)) {
+        return [get => Mojo::URL->new];
     }
+
+    my $furl = Mojo::URL->new('https://graph.facebook.com/v2.8/');
+    $furl->query->param(access_token => $app_id.'|'.$secret);
+    $furl->query->param(id => $url);
+
     return [get => $furl];
 }
 
@@ -27,6 +24,7 @@ sub extract_count {
     my ($self, $res) = @_;
 
     my $json = $res->json;
+
     $self->app->log->debug( dumper($json));
 
     return undef unless $json;
