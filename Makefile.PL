@@ -6,7 +6,7 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
-  NAME         => 'Heise-Shariff',
+  NAME         => 'Heise::Shariff',
   VERSION_FROM => 'lib/Heise/Shariff.pm',
   ABSTRACT     => 'Backend for privacy aware share buttons',
   AUTHOR       => 'Philipp Busse <pmb@heise.de>',
