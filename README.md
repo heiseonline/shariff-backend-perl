@@ -1,4 +1,4 @@
-Shariff Perl Backend [![Build Status](https://travis-ci.org/heiseonline/shariff-backend-perl.svg?branch=master)](https://travis-ci.org/heiseonline/shariff-backend-perl)
+[OBSOLETE] Shariff Perl Backend [![Build Status](https://travis-ci.org/heiseonline/shariff-backend-perl.svg?branch=master)](https://travis-ci.org/heiseonline/shariff-backend-perl)
 ===================
 
 Shariff is used to determine how often a page is shared in social media, but without generating requests from the displaying page to the social sites.
